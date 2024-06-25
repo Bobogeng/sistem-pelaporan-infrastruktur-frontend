@@ -46,6 +46,20 @@ const StyledInput = styled.div`
     transition: 0.5s ease-in-out;
     cursor: pointer;
   }
+
+  /* Small Screen */
+  @media (max-width: 768px) {
+    .input {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .input__image {
+      margin: auto;
+      margin-bottom: 2rem;
+      width: 50%;
+    }
+  }
 `;
 
 function Input() {

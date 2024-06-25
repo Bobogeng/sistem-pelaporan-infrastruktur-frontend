@@ -48,6 +48,10 @@ const StyledBerita = styled.div`
     text-align: center;
     margin: 2rem;
   }
+
+  /* Small Screen */
+  @media (max-width: 768px) {
+  }
 `;
 
 function Berita() {

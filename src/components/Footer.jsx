@@ -24,6 +24,10 @@ const StyledFooter = styled.div`
     transition: 0.5s ease-in-out;
     padding: 0.2rem;
   }
+
+  /* Small Screen */
+  @media (max-width: 768px) {
+  }
 `;
 
 function Footer() {
@@ -33,7 +37,7 @@ function Footer() {
         <footer className="footer">
           <h2>Sistem Pelaporan Infrastruktur</h2>
           <p>
-            Created by <a href="https://www.instagram.com/fatih_1344/">Muhammad Al Fatih</a> and <a href="https://www.instagram.com/maul.awlys/">Tria Maulida Sari</a>
+            Created by <a href="https://www.instagram.com/fatih_1344/">Muhammad Al Fatih</a> and <a href="https://www.instagram.com/triaamsss/">Tria Maulida Sari</a>
           </p>
         </footer>
       </div>

@@ -32,6 +32,23 @@ const StyledAbout = styled.div`
   p {
     font-size: 0.7rem;
   }
+
+  /* Small Screen */
+  @media (max-width: 768px) {
+    .about {
+      flex-direction: column-reverse;
+    }
+
+    .about__image {
+      margin: auto;
+      width: 50%;
+      margin-bottom: 2rem;
+    }
+
+    .description {
+      text-align: center;
+    }
+  }
 `;
 
 function About() {

@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
-import {useEffect} from 'react';
+import {useState, useEffect} from 'react';
+import {faBars, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const StyledNavbar = styled.nav`
   .container {
@@ -8,6 +10,7 @@ const StyledNavbar = styled.nav`
     position: fixed;
     top: 0;
     width: 100%;
+    z-index: 999;
   }
 
   .navbar {
@@ -48,9 +51,51 @@ const StyledNavbar = styled.nav`
     padding: 0.2rem;
     transition: 0.5s ease-in-out;
   }
+
+  .navbar__icon {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+
+  /* Small Screen */
+  @media (max-width: 768px) {
+    .navbar__list {
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 60px;
+      right: 0;
+      width: 105%;
+      height: calc(100% - 60px);
+      background-color: black;
+      text-align: center;
+      transform: translateX(110%);
+      transition: transform 0.3s ease-in-out;
+      z-index: 998;
+    }
+
+    .navbar__list.open {
+      transform: translateX(4%);
+    }
+
+    .navbar__item {
+      margin: 2rem 0;
+    }
+
+    .navbar__icon {
+      display: block;
+    }
+  }
 `;
 
 function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   useEffect(() => {
     const handleScroll = (event) => {
       if (event.target.tagName === 'A' && event.target.hash) {
@@ -91,30 +136,31 @@ function Navbar() {
           <Link to="/" className="navbar__judul" onClick={handleTitleClick}>
             <h1>Pelaporan Infrastruktur</h1>
           </Link>
-          <div>
-            <ul className="navbar__list">
-              <li className="navbar__item">
-                <Link to="/#about" className="navbar__link">
-                  About
-                </Link>
-              </li>
-              <li className="navbar__item">
-                <Link to="/#berita" className="navbar__link">
-                  Berita
-                </Link>
-              </li>
-              <li className="navbar__item">
-                <Link to="/#upload" className="navbar__link">
-                  Upload Berita
-                </Link>
-              </li>
-              <li className="navbar__item">
-                <Link to="/login" className="navbar__link">
-                  Login
-                </Link>
-              </li>
-            </ul>
+          <div className="navbar__icon" onClick={toggleMenu}>
+            <FontAwesomeIcon icon={isOpen ? faXmark : faBars} />
           </div>
+          <ul className={`navbar__list ${isOpen ? 'open' : ''}`}>
+            <li className="navbar__item">
+              <Link to="/#about" className="navbar__link" onClick={toggleMenu}>
+                About
+              </Link>
+            </li>
+            <li className="navbar__item">
+              <Link to="/#berita" className="navbar__link" onClick={toggleMenu}>
+                Berita
+              </Link>
+            </li>
+            <li className="navbar__item">
+              <Link to="/#upload" className="navbar__link" onClick={toggleMenu}>
+                Upload Berita
+              </Link>
+            </li>
+            <li className="navbar__item">
+              <Link to="/login" className="navbar__link" onClick={toggleMenu}>
+                Login
+              </Link>
+            </li>
+          </ul>
         </nav>
       </div>
     </StyledNavbar>
