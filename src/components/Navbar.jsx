@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
-import {faBars, faXmark} from '@fortawesome/free-solid-svg-icons';
+import {faBars, faUser, faXmark} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 const StyledNavbar = styled.nav`
@@ -41,6 +41,22 @@ const StyledNavbar = styled.nav`
     text-decoration: none;
     color: white;
     margin: 1rem;
+    transition: 0.5s ease-in-out;
+  }
+
+  .navbar__profile {
+    text-decoration: none;
+    color: white;
+    margin: 1rem;
+    transition: 0.5s ease-in-out;
+    border-radius: 100px;
+  }
+
+  .navbar__profile:hover {
+    background-color: white;
+    color: black;
+    border-radius: 100px;
+    padding: 0.2rem;
     transition: 0.5s ease-in-out;
   }
 
@@ -156,8 +172,8 @@ function Navbar() {
               </Link>
             </li>
             <li className="navbar__item">
-              <Link to="/login" className="navbar__link" onClick={toggleMenu}>
-                Login
+              <Link to="/profile" className="navbar__profile" onClick={toggleMenu}>
+                <FontAwesomeIcon icon={faUser} />
               </Link>
             </li>
           </ul>

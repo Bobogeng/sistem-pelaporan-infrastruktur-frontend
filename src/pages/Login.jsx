@@ -1,7 +1,10 @@
 import styled, {createGlobalStyle} from 'styled-components';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
+import {useState} from 'react';
+import LoginValidation from '../components/Validation/LoginValidation';
+import axios from 'axios';
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -99,19 +102,61 @@ const StyledLogin = styled.div`
     background-color: black;
   }
 
+  .login__error {
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    font-size: 0.7rem;
+  }
+
   /* Small Screen */
   @media (min-width: 576px) {
   }
 `;
 
 function Login() {
+  const [values, setValues] = useState({
+    email: '',
+    password: '',
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const navigate = useNavigate();
+
+  const handleInput = (event) => {
+    setValues((prev) => ({...prev, [event.target.name]: [event.target.value]}));
+  };
+
+  const handleSubmit = (event) => {
+    // console.log('test klik login');
+    event.preventDefault();
+    const validatoinErrors = LoginValidation(values);
+    setErrors(validatoinErrors);
+    if (validatoinErrors.email == '' && validatoinErrors.password == '') {
+      axios
+        .post('http://localhost:8080/login', {
+          email: values.email,
+          password: values.password,
+        })
+        .then((res) => {
+          localStorage.setItem('authToken', res.data.token);
+          localStorage.setItem('username', res.data.username);
+          localStorage.setItem('email', res.data.email);
+          navigate('/profile');
+          navigate(0);
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
   return (
     <>
       <GlobalStyle />
       <StyledLogin>
         <div className="container">
           <h1 className="h1">Login</h1>
-          <form action="" className="login" id="login">
+          <form action="" className="login" id="login" onSubmit={handleSubmit}>
             <div className="login__back">
               <Link to="/" className="login__link__back">
                 <FontAwesomeIcon icon={faArrowLeft} className="login__back__icon" />
@@ -123,12 +168,16 @@ function Login() {
                 Email
               </label>
               <br />
-              <input type="email" name="email" className="email" required />
+              <input type="email" name="email" className="email" onChange={handleInput} />
+              <br />
+              {errors.email && <span className="login__error">{errors.email}</span>}
             </div>
             <div className="form__part">
               <label htmlFor="password">Password</label>
               <br />
-              <input type="password" name="password" className="password" required />
+              <input type="password" name="password" className="password" onChange={handleInput} />
+              <br />
+              {errors.password && <span className="login__error">{errors.password}</span>}
             </div>
             <p className="login__p">
               Belum Punya Akun?{' '}

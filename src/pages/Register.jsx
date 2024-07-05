@@ -1,7 +1,10 @@
 import styled, {createGlobalStyle} from 'styled-components';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faArrowLeft} from '@fortawesome/free-solid-svg-icons';
+import RegisterValidation from '../components/Validation/RegisterValidation';
+import {useState} from 'react';
+import axios from 'axios';
 
 const GlobalStyle = createGlobalStyle`
   html, body {
@@ -99,19 +102,63 @@ const StyledRegister = styled.div`
     background-color: black;
   }
 
+  .register__error {
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    font-size: 0.7rem;
+  }
+
   /* Small Screen */
   @media (max-width: 768px) {
   }
 `;
 
 function Register() {
+  const [values, setValues] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+
+  const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleInput = (event) => {
+    const {name, value} = event.target;
+    setValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const validationErrors = RegisterValidation(values);
+    setErrors(validationErrors);
+    // console.log(validationErrors, 'klik registers');
+    setIsSubmitted(true);
+    if (validationErrors.email == '' && validationErrors.password == '' && validationErrors.username == '') {
+      axios
+        .post('http://localhost:8080/register', {
+          username: values.username,
+          email: values.email,
+          password: values.password,
+        })
+        .then((res) => navigate('/login'))
+        .catch((err) => console.log(err));
+    }
+  };
+
   return (
     <>
       <GlobalStyle />
       <StyledRegister>
         <div className="container">
           <h1 className="h1">Register</h1>
-          <form action="" className="register" id="register">
+          <form action="" className="register" id="register" onSubmit={handleSubmit}>
             <div className="register__back">
               <Link to="/" className="register__link__back">
                 <FontAwesomeIcon icon={faArrowLeft} className="register__back__icon" />
@@ -123,19 +170,25 @@ function Register() {
                 Username
               </label>
               <br />
-              <input type="username" name="username" className="username" required />
+              <input type="text" name="username" className="username" onChange={handleInput} />
+              <br />
+              {isSubmitted && errors.username && <span className="register__error">{errors.username}</span>}
             </div>
             <div className="form__part">
               <label htmlFor="email" className="register__label">
                 Email
               </label>
               <br />
-              <input type="email" name="email" className="email" required />
+              <input type="email" name="email" className="email" onChange={handleInput} />
+              <br />
+              {isSubmitted && errors.email && <span className="register__error">{errors.email}</span>}
             </div>
             <div className="form__part">
               <label htmlFor="password">Password</label>
               <br />
-              <input type="password" name="password" className="password" required />
+              <input type="password" name="password" className="password" onChange={handleInput} />
+              <br />
+              {isSubmitted && errors.password && <span className="register__error">{errors.password}</span>}
             </div>
             <p className="register__p">
               Sudah Punya Akun?{' '}
